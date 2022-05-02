@@ -30,6 +30,7 @@ public class Member {
     private String contact;
 
     @Column(nullable = false)
+    @Getter(AccessLevel.NONE)
     private String password;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -50,4 +51,5 @@ public class Member {
     public void changePassword(String password) {
         this.password = password;
     }
+
 }
