@@ -23,4 +23,14 @@ public class MemberServiceImpl implements MemberService {
     public Member save(Member member) {
         return memberRepository.save(member);
     }
+
+    @Override
+    public void delete(Long id) {
+        memberRepository.deleteById(id);
+    }
+
+    @Override
+    public Member findOne(Long id) {
+        return memberRepository.findById(id).orElse(null);
+    }
 }
