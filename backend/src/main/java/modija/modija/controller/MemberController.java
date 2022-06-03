@@ -2,11 +2,13 @@ package modija.modija.controller;
 
 import lombok.RequiredArgsConstructor;
 import modija.modija.domain.Member;
-import modija.modija.model.MemberVo;
+import modija.modija.model.Paging;
 import modija.modija.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,26 +19,24 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/")
-    public @ResponseBody String member() {
-        return "member test";
+    public ResponseEntity<Page<Member>> list(@RequestBody Paging paging) {
+        Pageable pageable = PageRequest.of(paging.getPage(), paging.getSize());
+        return new ResponseEntity<>(memberService.findAll(pageable), HttpStatus.OK);
     }
 
-    @PostMapping("/list")
-    public Page<Member> list() {
-        int page = 0;
-        int size = 5;
-        Pageable pageable = PageRequest.of(page, size);
-        return memberService.findAll(pageable);
+    @GetMapping("/{id}")
+    public ResponseEntity<Member> getOne(@PathVariable Long id) {
+        return new ResponseEntity<>(memberService.findOne(id), HttpStatus.OK);
     }
 
-    @PutMapping("/save")
-    public Member save(MemberVo memberVo) {
-        return null;
+    @PutMapping("/")
+    public ResponseEntity<Member> save(Member member) {
+        return new ResponseEntity<>(memberService.save(member), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        memberService.delete(id);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }
